@@ -21,6 +21,4 @@ public class Client {
     String name;
     Long balance;
 
-    @OneToMany
-    List<Payment> payments;
 }

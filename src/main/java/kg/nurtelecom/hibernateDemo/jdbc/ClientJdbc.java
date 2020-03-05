@@ -1,9 +1,11 @@
 package kg.nurtelecom.hibernateDemo.jdbc;
 
 import kg.nurtelecom.hibernateDemo.entities.Client;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,9 @@ public class ClientJdbc {
     @Value("${spring.datasource.password}")
     String password;
 
+    @Autowired
+    DataSource dataSource;
+
     public List<Client> getAllClient() {
         List<Client> clients = new ArrayList<>();
         Connection connection = null;
@@ -27,6 +32,34 @@ public class ClientJdbc {
             connection = DriverManager.getConnection(url, username, password);
             Long after = System.currentTimeMillis();
             System.err.println("Connection took: " + (after-before));
+            statement = connection.createStatement();
+            rs = statement.executeQuery("SELECT * FROM CLIENT");
+            while(rs.next()) {
+                clients.add(Client.builder()
+                        .id(rs.getLong("ID"))
+                        .balance(rs.getLong("BALANCE"))
+                        .name(rs.getString("NAME"))
+                        .build());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(rs, statement, connection);
+        }
+        return clients;
+    }
+
+    public List<Client> getAllClientUsingDbPool() {
+        List<Client> clients = new ArrayList<>();
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet rs = null;
+        try{
+            Long before = System.currentTimeMillis();
+            connection = dataSource.getConnection();
+            Long after = System.currentTimeMillis();
+            System.err.println("Connection in pool took: " + (after-before));
             statement = connection.createStatement();
             rs = statement.executeQuery("SELECT * FROM CLIENT");
             while(rs.next()) {
