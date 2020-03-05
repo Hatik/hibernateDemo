@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class ClientJdbc {
+public class ClientJdbc extends BaseJdbc {
     @Value("${spring.datasource.url}")
     String url;
     @Value("${spring.datasource.username}")
@@ -78,19 +78,4 @@ public class ClientJdbc {
         return clients;
     }
 
-    private void close(ResultSet rs, Statement statement, Connection connection){
-        closeAutoCloseable(rs);
-        closeAutoCloseable(statement);
-        closeAutoCloseable(connection);
-    }
-
-    private void closeAutoCloseable(AutoCloseable resource){
-        if (resource != null) {
-            try {
-                resource.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }

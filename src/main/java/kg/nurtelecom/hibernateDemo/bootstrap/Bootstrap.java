@@ -3,6 +3,8 @@ package kg.nurtelecom.hibernateDemo.bootstrap;
 import kg.nurtelecom.hibernateDemo.entities.Client;
 import kg.nurtelecom.hibernateDemo.entities.Payment;
 import kg.nurtelecom.hibernateDemo.jdbc.ClientJdbc;
+import kg.nurtelecom.hibernateDemo.jdbc.PaymentJdbc;
+import kg.nurtelecom.hibernateDemo.models.PaymentReportModel;
 import kg.nurtelecom.hibernateDemo.repo.ClientRepo;
 import kg.nurtelecom.hibernateDemo.repo.PaymentRepo;
 import lombok.AccessLevel;
@@ -11,11 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Bootstrap implements CommandLineRunner {
     @Autowired
     ClientJdbc clientJdbc;
+    @Autowired
+    PaymentJdbc paymentJdbc;
     @Autowired
     ClientRepo clientRepo;
     @Autowired
@@ -48,9 +54,10 @@ public class Bootstrap implements CommandLineRunner {
         System.out.println(clientJdbc.getAllClient());
         System.out.println(clientJdbc.getAllClient());
         System.out.println(clientJdbc.getAllClientUsingDbPool());
-        System.out.println(clientJdbc.getAllClientUsingDbPool());
         System.out.println(clientRepo.findAll());
         System.out.println(paymentRepo.findAll());
+        System.out.println(paymentJdbc.getAllPaymentsReport());
         Thread.currentThread().join();
     }
+
 }
